@@ -318,6 +318,14 @@
         }
 
         async function executeBooking() {
+            // CHỐT CHẶN BẢO MẬT: Kiểm tra lại lần cuối xem thiết bị này đã có chỗ chưa
+            if (getMyBookedSeatId()) {
+                alert('❌ Bạn đã có chỗ rồi! Vui lòng bấm vào bàn màu xanh dương để HỦY chỗ hiện tại trước khi đặt chỗ mới.');
+                selectedSeatLocal = null;
+                renderGrid();
+                return;
+            }
+
             if (!selectedSeatLocal) {
                 alert('Vui lòng click chọn 1 bàn làm việc trống trên sơ đồ!');
                 return;
