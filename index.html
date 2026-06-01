@@ -31,7 +31,7 @@
         .screen-indicator { width: 100%; min-width: 200px; height: 8px; background: #00bcd4; margin-bottom: 5px; border-radius: 4px; }
         .screen-text { font-size: 12px; font-weight: bold; color: #00bcd4; letter-spacing: 2px; margin-bottom: 30px; text-transform: uppercase; }
 
-        /* BỐ CỤC KHU VỰC BÀN GHẾ (MẶC ĐỊNH MÀN HÌNH TO) */
+        /* BỐ CỤC KHU VỰC BÀN GHẾ */
         .section-top { display: flex; flex-direction: column; gap: 4px; margin-bottom: 30px; }
         .section-bottom { display: flex; justify-content: center; gap: 30px; } 
         .row { display: flex; justify-content: center; gap: 4px; margin: 4px 0; width: max-content; }
@@ -39,7 +39,7 @@
         .column { display: flex; flex-direction: column; gap: 4px; }
         .seat-wrapper { padding: 12px; display: inline-block; position: relative; box-sizing: border-box; }
 
-        /* ĐÃ FIX CỘT TRỤ (PILLAR) BẰNG ĐÚNG KÍCH THƯỚC BÀN ĐỂ THẲNG HÀNG 100% */
+        /* CỘT TRỤ (PILLAR) */
         .pillar { width: 55px; height: 45px; background-color: #222; border-radius: 4px; box-sizing: border-box; margin: 0; }
 
         /* THIẾT KẾ BÀN & GHẾ */
@@ -52,14 +52,20 @@
         .chair-left::after   { width: 12px; height: 26px; left: -16px; top: 7.5px; border-radius: 10px 4px 4px 10px; }
         .chair-right::after  { width: 12px; height: 26px; right: -16px; top: 7.5px; border-radius: 4px 10px 10px 4px; }
 
+        /* (1) MÀU TÍM NHẠT CHO KHU VỰC GHẾ ĐƯỢC CHỈ ĐỊNH (39-52) */
+        .seat.purple-zone { background-color: #f4ecf7; border-color: #bb8fce; }
+        .seat.purple-zone::after { background-color: #bb8fce; }
+
         /* MÀU SẮC TRẠNG THÁI */
         .seat.selected { background-color: #2ecc71; border-color: #27ae60; color: #fff; }
         .seat.selected::after { background-color: #27ae60; }
         .seat.selected .user-name { color: #fff; }
+        
         .seat.occupied { background-color: #e74c3c; border-color: #c0392b; color: #fff; cursor: not-allowed; }
         .seat.occupied::after { background-color: #c0392b; }
         .seat.occupied .user-name { color: #f1c40f; font-weight: bold; } 
-        .seat.my-seat { background-color: #3498db; border-color: #2980b9; color: #fff; }
+        
+        .seat.my-seat { background-color: #3498db; border-color: #2980b9; color: #fff; cursor: pointer; }
         .seat.my-seat::after { background-color: #2980b9; }
         .seat.my-seat .user-name { color: #fff; font-weight: bold; }
 
@@ -74,9 +80,7 @@
         #btn-confirm.active:hover { background-color: #f39c12; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(241,196,15,0.6); cursor: pointer; }
         #btn-confirm.disabled { background-color: #7f8c8d; color: #ddd; box-shadow: none; cursor: not-allowed; transform: none; }
 
-        /* ========================================== */
-        /* TỐI ƯU HÓA HIỂN THỊ ĐỦ TRÊN 100% ĐIỆN THOẠI */
-        /* ========================================== */
+        /* MOBILE OPTIMIZATION */
         @media (max-width: 650px) {
             body { padding: 10px 0; }
             .office-container { padding: 15px 2px; }
@@ -86,7 +90,6 @@
             .seat { width: 32px; height: 26px; font-size: 11px; border-width: 1px; }
             .seat .user-name { font-size: 7px; max-width: 30px; margin-top: 1px; }
             
-            /* Kích thước của cột trên mobile phải tuyệt đối bằng kích thước bàn */
             .pillar { width: 32px; height: 26px; box-sizing: border-box; margin: 0; }
             
             .chair-top::after    { width: 16px; height: 6px; top: -8px; left: 7px; border-radius: 4px 4px 2px 2px; }
@@ -132,6 +135,7 @@
 
     <div class="legend">
         <div class="legend-item"><div class="seat-wrapper"><div class="seat chair-top"></div></div> Bàn trống</div>
+        <div class="legend-item"><div class="seat-wrapper"><div class="seat purple-zone chair-top"></div></div> Ghế dãy 39-52</div>
         <div class="legend-item"><div class="seat-wrapper"><div class="seat chair-top selected"></div></div> Đang chọn thử</div>
         <div class="legend-item"><div class="seat-wrapper"><div class="seat chair-top my-seat"></div></div> Bàn của bạn</div>
         <div class="legend-item"><div class="seat-wrapper"><div class="seat chair-top occupied"></div></div> Đã có người</div>
@@ -166,9 +170,6 @@
             localStorage.setItem('cinema_device_id', myDeviceId);
         }
 
-        // ==========================================
-        // CẤU TRÚC DÃY NGANG PHÍA TRÊN (Giữ nguyên - Đã fix CSS thẳng hàng)
-        // ==========================================
         const topSeatsLayout = [
             [{id: 66, dir: 'top'}, {id: 67, dir: 'top'}, {id: 68, dir: 'top'}, {id: 69, dir: 'top'}, {id: 70, dir: 'top'}, {id: 71, dir: 'top'}, {id: 72, dir: 'top'}],
             [{id: 59, dir: 'bottom'}, {id: 60, dir: 'bottom'}, {id: 61, dir: 'bottom'}, {id: 62, dir: 'bottom'}, {id: 63, dir: 'bottom'}, {id: 64, dir: 'bottom'}, {id: 65, dir: 'bottom'}],
@@ -179,28 +180,17 @@
             [{id: 25, dir: 'top'}, {id: 26, dir: 'top'}, {id: 27, dir: 'top'}, {id: 28, dir: 'top'}, {id: 29, dir: 'top'}, {id: 30, dir: 'top'}, {id: 31, dir: 'top'}],
         ];
 
-        // ==========================================
-        // CẤU TRÚC DÃY DỌC PHÍA DƯỚI (1-24) THEO LUẬT MỚI
-        // ==========================================
         const bottomClustersLayout = [
-            // Cụm 1: 1-4 (Đứng rời)
-            [
-                [{id: 1, dir: 'right'}, {id: 2, dir: 'right'}, {id: 3, dir: 'right'}, {id: 4, dir: 'right'}]
-            ],
-            // Cụm 2: 5-8 sát với 9-12 (Đã đảo chiều)
+            [[{id: 1, dir: 'right'}, {id: 2, dir: 'right'}, {id: 3, dir: 'right'}, {id: 4, dir: 'right'}]],
             [
                 [{id: 5, dir: 'left'}, {id: 6, dir: 'left'}, {id: 7, dir: 'left'}, {id: 8, dir: 'left'}],
                 [{id: 9, dir: 'right'}, {id: 10, dir: 'right'}, {id: 11, dir: 'right'}, {id: 12, dir: 'right'}]
             ],
-            // Cụm 3: 13-16 sát với 17-20 (Đã đảo chiều)
             [
                 [{id: 13, dir: 'left'}, {id: 14, dir: 'left'}, {id: 15, dir: 'left'}, {id: 16, dir: 'left'}],
                 [{id: 17, dir: 'right'}, {id: 18, dir: 'right'}, {id: 19, dir: 'right'}, {id: 20, dir: 'right'}]
             ],
-            // Cụm 4: 21-24 (Đứng rời)
-            [
-                [{id: 21, dir: 'left'}, {id: 22, dir: 'left'}, {id: 23, dir: 'left'}, {id: 24, dir: 'left'}]
-            ]
+            [[{id: 21, dir: 'left'}, {id: 22, dir: 'left'}, {id: 23, dir: 'left'}, {id: 24, dir: 'left'}]]
         ];
 
         onValue(seatsRef, (snapshot) => {
@@ -231,6 +221,11 @@
             
             const seat = document.createElement('div');
             seat.className = `seat chair-${seatData.dir}`;
+            
+            // GẮN CLASS MÀU TÍM CHO GHẾ TỪ 39 ĐẾN 52
+            if (seatData.id >= 39 && seatData.id <= 52) {
+                seat.classList.add('purple-zone');
+            }
             
             const seatLabel = document.createElement('span');
             seatLabel.innerText = seatData.id < 10 ? '0' + seatData.id : seatData.id; 
@@ -318,14 +313,6 @@
         }
 
         async function executeBooking() {
-            // CHỐT CHẶN BẢO MẬT: Kiểm tra lại lần cuối xem thiết bị này đã có chỗ chưa
-            if (getMyBookedSeatId()) {
-                alert('❌ Bạn đã có chỗ rồi! Vui lòng bấm vào bàn màu xanh dương để HỦY chỗ hiện tại trước khi đặt chỗ mới.');
-                selectedSeatLocal = null;
-                renderGrid();
-                return;
-            }
-
             if (!selectedSeatLocal) {
                 alert('Vui lòng click chọn 1 bàn làm việc trống trên sơ đồ!');
                 return;
